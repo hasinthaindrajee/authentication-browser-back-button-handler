@@ -20,7 +20,8 @@ public class CustomLoginEndpointUtil {
     private static final String SP_REDIRECT_URL_RESOURCE_PATH = "/identity/config/relyingPartyRedirectUrls";
     private static final Log log = LogFactory.getLog(CustomLoginEndpointUtil.class);
 
-    public static JsonObject getSessionDataKeyStatus(String relyingParty, String sessionDataKey, String tenantDomain) {
+    public static String getSessionDataKeyStatus(String relyingParty, String sessionDataKey, String tenantDomain) {
+
 
         JsonObject result = new JsonObject();
         if (StringUtils.isBlank(relyingParty) || StringUtils.isBlank(sessionDataKey)) {
@@ -30,13 +31,13 @@ public class CustomLoginEndpointUtil {
 
             // Can't handle
             result.addProperty("status", "success");
-            return result;
+            return result.toString();
         }
 
         // Valid Request
         if (FrameworkUtils.getAuthenticationContextFromCache(sessionDataKey) != null) {
             result.addProperty("status", "success");
-            return result;
+            return result.toString();
         }
 
         String redirectUrl = getRelyingPartyRedirectUrl(relyingParty, tenantDomain);
@@ -46,12 +47,12 @@ public class CustomLoginEndpointUtil {
             }
             // Can't handle
             result.addProperty("status", "success");
-            return result;
+            return result.toString();
         }
 
         result.addProperty("status", "redirect");
         result.addProperty("redirectUrl", redirectUrl);
-        return result;
+        return result.toString();
     }
 
     /**

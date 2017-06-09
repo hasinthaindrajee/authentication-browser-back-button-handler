@@ -1,12 +1,13 @@
-Please follow the following instructions in order to apply the changes. We are rewriting the above given instruction, Please note that there are differences in the above given instructions and this set of instructions. So please be kind enough to follow the below instructions. 
+Please follow the following instructions in order to apply the changes. We are rewriting the above given instruction since there are differences in the above given instructions and this set of instructions. So please be kind enough to follow the below instructions. 
 
 
-First, you need to apply patch WSO2-CARBON-PATCH-4.4.0-0393 attached to this ticket in your environment. Please download WSO2-CARBON-PATCH-4.4.0-0393.zip and follow the directions in readme.
+First, you need to apply patch WSO2-CARBON-PATCH-4.4.0-0393 attached to this ticket in your environment. Please download WSO2-CARBON-PATCH-4.4.0-0393.zip and follow the directions in readme in order to apply the patch.
+
 Download the CustomLoginPageHandlerArtifacts_RegistryBased.zip. and extract it to find the artifacts. You can follow the bellow steps to apply this solution.
 
-Copy CustomLoginEndpointUtils-1.0.0.jar file to the <IS_HOME>/repository/components/dropins/ folder
+Copy CustomLoginEndpointUtils-1.0.0.jar which is inside artifacts folder, to the <IS_HOME>/repository/components/dropins/ folder
 
-Copy check_session_id.jsp file to the <IS_HOME>/repository/deployment/server/webapps/authenticationendpoint/ folder. (note that the new file is slightly different from the one which is shared with you earlier)
+Copy check_session_id.jsp file in the artifact directory to the <IS_HOME>/repository/deployment/server/webapps/authenticationendpoint/ folder. (note that the new file is slightly different from the one which is shared with you earlier)
 
 Open <IS_HOME>/repository/deployment/server/webapps/authenticationendpoint/WEB-INF/web.xml file and add following entries,,
     <servlet>
@@ -75,11 +76,12 @@ Login to the admin console
 Click on Main Menu -> Registry -> Browse ->
 Now you will see the registry browswer
 
-Browse the registry and go to /_system/config/identity/config  (Once you are in this location the Location will be shown as  "/_system/config/identity/config" in registry browswer Location)
+Browse the registry and go to /_system/config/identity/config (Finally click on "config" and once you are in this location the Location will be shown as  "/_system/config/identity/config" in registry browswer Location)
 
-Once you navigate there follow the following steps to add a registry resource.
+Once you navigate there, follow the following steps to add a registry resource.
 
 Click on AddResource 
+
 Fill the form you get with following information. 
 
 	Method : Create text content
@@ -87,8 +89,7 @@ Fill the form you get with following information.
 Click in "Add" button.
 
 
-
-The created registry resource can be seen once you click on Add button. Click on it (relyingPartyRedirectUrls). Once you click and go to that resource, you will see a section as "Properties" Click on the "+" sign you see at the right hand conrner of property section. This will allow you to add a property to the resource. Keey should be the relying party name and value should be the redirectURL you want the application to be redirected when the back button is pressed.
+The created registry resource can be seen once you click on Add button. Click on it (relyingPartyRedirectUrls). Once you click and go inside that resource, you will see a section as "Properties" Click on the "+" sign you see at the right hand conrner of property section. This will allow you to add a property to the resource. Keey should be the relying party name and value should be the redirectURL you want the application to be redirected when the back button is pressed.
 
 
 Click on add new property. There you will be prompted to add property key and property value. 
@@ -108,6 +109,9 @@ Key                               Value
 
 wso2.my.dashboard		  https://localhost:9443/dashboard/index.jag
 
+Once you fill key and value click on "Add" button. 
+
+Now you can try out your scenario.
 
 Note that these configurations are per-tenant. You need to do this configuration after loging into SPs tenant Admin console. 
 
