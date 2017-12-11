@@ -26,6 +26,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="org.wso2.carbon.identity.application.authentication.endpoint.util.TenantDataManager" %>
 <%@ page import="java.util.ResourceBundle" %>
+<%@ page import="org.wso2.carbon.identity.core.util.IdentityCoreConstants" %>
 
 <%!
     private static final String FIDO_AUTHENTICATOR = "FIDOAuthenticator";
@@ -47,6 +48,10 @@
         }
 
         String errorMessage = "Authentication Failed! Please Retry";
+        String errorCode = "";
+        if(request.getParameter(Constants.ERROR_CODE)!=null){
+            errorCode = request.getParameter(Constants.ERROR_CODE) ;
+        }
         String loginFailed = "false";
 
         if (Boolean.parseBoolean(request.getParameter(Constants.AUTH_FAILURE))) {
@@ -70,7 +75,12 @@
 
 
     %>
-
+    <%
+        boolean reCaptchaEnabled = false;
+        if (request.getParameter("reCaptcha") != null && "TRUE".equalsIgnoreCase(request.getParameter("reCaptcha"))) {
+            reCaptchaEnabled = true;
+        }
+    %>
     <html>
     <head>
         <meta charset="utf-8">
@@ -87,6 +97,15 @@
         <script src="js/respond.min.js"></script>
         <![endif]-->
 
+        <%
+            if (reCaptchaEnabled) {
+        %>
+        <script src='<%=
+        (request.getParameter("reCaptchaAPI"))%>'></script>
+        <%
+            }
+        %>
+
  <script>
             function checkSessionKey() {
                 $.ajax({
@@ -100,7 +119,6 @@
                     }
                 });
             }
-
             function getParameterByName(name, url) {
                 if (!url) {
                     url = window.location.href;
@@ -113,11 +131,9 @@
                 return decodeURIComponent(results[2].replace(/\+/g, " "));
             }
         </script>
-
     </head>
 
     <body onload="checkSessionKey()">
-
     <!-- header -->
     <header class="header header-default">
         <div class="container-fluid"><br></div>
@@ -324,6 +340,23 @@
                 $('.main-link').next().hide();
             });
 
+            <%
+            if(reCaptchaEnabled) {
+            %>
+            var error_msg = $("#error-msg");
+            $("#loginForm").submit(function (e) {
+                var resp = $("[name='g-recaptcha-response']")[0].value;
+                if (resp.trim() == '') {
+                    error_msg.text("Please select reCaptcha.");
+                    error_msg.show();
+                    $("html, body").animate({scrollTop: error_msg.offset().top}, 'slow');
+                    return false;
+                }
+                return true;
+            });
+            <%
+            }
+            %>
         });
         function myFunction(key, value, name) {
             var object = document.getElementById(name);
@@ -354,13 +387,10 @@
                 return $("#popover-content").html();
             }
         });
- 	window.onunload = function(){};
 
+ window.onunload = function(){};
     </script>
-
     </body>
     </html>
-
-
 </fmt:bundle>
 
