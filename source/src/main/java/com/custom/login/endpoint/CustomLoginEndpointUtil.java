@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.carbon.identity.application.authentication.framework.context.AuthenticationContext;
 import org.wso2.carbon.identity.application.authentication.framework.util.FrameworkUtils;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
@@ -22,11 +23,18 @@ public class CustomLoginEndpointUtil {
 
     public static String getSessionDataKeyStatus(String relyingParty, String sessionDataKey, String tenantDomain) {
 
+        if(log.isDebugEnabled()){
+
+            log.debug(String.format("Checking the the session status. " +
+                    "sessionDataKey : '%s', relyingParty : '%s', tenantDomain : '%s'",
+                    sessionDataKey, relyingParty, tenantDomain));
+
+        }
 
         JsonObject result = new JsonObject();
         if (StringUtils.isBlank(relyingParty) || StringUtils.isBlank(sessionDataKey)) {
             if (log.isDebugEnabled()) {
-                log.debug("Required data to proceed is not available in the request.");
+                log.debug("Required data ( relyingParty or sessionDataKey) to proceed is not available in the request.");
             }
 
             // Can't handle
@@ -35,7 +43,17 @@ public class CustomLoginEndpointUtil {
         }
 
         // Valid Request
-        if (FrameworkUtils.getAuthenticationContextFromCache(sessionDataKey) != null) {
+        AuthenticationContext authenticationContextFromCache = FrameworkUtils.getAuthenticationContextFromCache(sessionDataKey);
+        if (authenticationContextFromCache != null) {
+
+            if(log.isDebugEnabled()){
+                log.debug(String.format("A cached authentication context is available for the session data key : " +
+                        "'%s'\nSession Identifier : '%s'\nCaller Session Key : '%s'",
+                        sessionDataKey,
+                        authenticationContextFromCache.getSessionIdentifier(),
+                        authenticationContextFromCache.getCallerSessionKey()));
+            }
+
             result.addProperty("status", "success");
             return result.toString();
         }
